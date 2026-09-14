@@ -1,0 +1,141 @@
+
+.chat-area {
+    flex: 1;
+
+    height: 100vh;
+
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    background: var(--background);
+
+    color: var(--text);
+}
+
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.empty-state {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    color: var(--text);
+}
+
+
+/* =========================================
+   COMPOSER CONTAINER
+========================================= */
+
+.composer-container {
+    width: 100%;
+
+    padding: 16px 40px 24px;
+
+    box-sizing: border-box;
+
+    background: var(--background);
+}
+
+
+/* =========================================
+   COMPOSER
+========================================= */
+
+.composer {
+    width: min(850px, 100%);
+
+    margin-left: auto;
+    margin-right: auto;
+
+    display: flex;
+
+    gap: 10px;
+}
+
+
+/* =========================================
+   INPUT
+========================================= */
+
+.composer input {
+    flex: 1;
+
+    min-width: 0;
+
+    padding: 13px 16px;
+
+    border: 1px solid var(--input-border);
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: var(--input-background);
+
+    color: var(--text);
+
+    font-size: 14px;
+}
+
+
+.composer input::placeholder {
+    color: var(--text-placeholder);
+}
+
+
+.composer input:focus {
+    border-color: var(--input-focus-border);
+}
+
+
+.composer input:disabled {
+    background: var(--surface-secondary);
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================
+   SEND BUTTON
+========================================= */
+
+.composer button {
+    padding: 0 20px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: var(--button-background);
+
+    color: var(--button-text);
+
+    font-size: 14px;
+
+    cursor: pointer;
+}
+
+
+.composer button:hover {
+    opacity: 0.9;
+}
+
+
+.composer button:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+}
+

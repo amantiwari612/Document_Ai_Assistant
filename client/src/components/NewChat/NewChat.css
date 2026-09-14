@@ -1,0 +1,226 @@
+
+.new-chat-screen {
+    flex: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px;
+
+    background: var(--background);
+
+    color: var(--text);
+}
+
+
+.new-chat-content {
+    width: min(500px, 100%);
+
+    text-align: center;
+}
+
+
+.new-chat-content h1 {
+    margin: 0;
+
+    color: var(--text);
+
+    font-size: 28px;
+    font-weight: 600;
+}
+
+
+.new-chat-description {
+    margin: 10px 0 28px;
+
+    color: var(--text-muted);
+
+    font-size: 14px;
+}
+
+
+/* =========================================
+   UPLOAD
+========================================= */
+
+.upload-document {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    padding: 14px;
+
+    border: 1px solid var(--border-strong);
+
+    border-radius: 10px;
+
+    background: var(--surface);
+
+    color: var(--text);
+
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+
+.upload-document:hover {
+    background: var(--hover-background);
+}
+
+
+.upload-icon {
+    font-size: 20px;
+}
+
+
+/* =========================================
+   DIVIDER
+========================================= */
+
+.new-chat-divider {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    margin: 28px 0;
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+}
+
+
+.new-chat-divider::before,
+.new-chat-divider::after {
+    content: "";
+
+    flex: 1;
+
+    height: 1px;
+
+    background: var(--border);
+}
+
+
+/* =========================================
+   EXISTING DOCUMENTS
+========================================= */
+
+.existing-documents {
+    text-align: left;
+}
+
+
+.existing-documents-title {
+    margin-bottom: 10px;
+
+    color: var(--text-secondary);
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+.document-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+
+/* =========================================
+   DOCUMENT
+========================================= */
+
+.document-option {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 12px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    background: var(--surface);
+
+    color: var(--text);
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s,
+        border-color 0.15s;
+}
+
+
+.document-option:hover {
+    background: var(--hover-background);
+
+    border-color: var(--border-strong);
+}
+
+
+.document-icon {
+    width: 36px;
+    height: 36px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: var(--icon-background);
+
+    font-size: 18px;
+}
+
+
+.document-info {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+}
+
+
+.document-name {
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+    color: var(--text);
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+
+.document-action {
+    margin-top: 3px;
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+}
+
