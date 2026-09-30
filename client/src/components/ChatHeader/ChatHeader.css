@@ -1,24 +1,17 @@
 
 .chat-header {
     width: 100%;
-
     padding: 16px 24px;
-
     box-sizing: border-box;
-
     border-bottom: 1px solid var(--border);
-
     background: var(--background);
 }
-
 
 .chat-header-left {
     display: flex;
     align-items: center;
-
     gap: 12px;
 }
-
 
 .header-document-icon {
     width: 36px;

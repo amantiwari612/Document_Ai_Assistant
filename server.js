@@ -1,6 +1,8 @@
 import express from "express";
 import cors from 'cors';
 import chatRouter from "./src/api/chat.js";
+import uploadRouter from "./src/api/router.js";
+import documentRouter from "./src/api/document.js";
 
 const app=express();
 const PORT=3000;
@@ -17,6 +19,8 @@ app.get("/api/health",(req,res)=>{
 })
 
 app.use("/api/chat",chatRouter);
+app.use("/api/upload",uploadRouter);
+app.use('/api/document',documentRouter);
 
 app.listen(PORT,()=>{
   console.log(
