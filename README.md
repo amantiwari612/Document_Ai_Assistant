@@ -48,6 +48,12 @@ Use the appropriate command for your project:
 
 npm run dev [for Vite]
 node source.js [for server -rag and model]
+# Ui
+5.Final lookup
+<img width="803" height="498" alt="Screenshot 2026-09-30 at 3 13 18 PM" src="https://github.com/user-attachments/assets/d32336f4-7a0a-416f-8ab3-e94d416494ff" />
+<img width="1912" height="922" alt="Screenshot 2026-09-30 at 3 13 09 PM" src="https://github.com/user-attachments/assets/f2a57fd4-27be-4071-aa41-10dbbadcf9bd" />
+<img width="1912" height="920" alt="Screenshot 2026-09-30 at 3 12 56 PM" src="https://github.com/user-attachments/assets/bf6e2661-8974-48e1-8a80-e378b1a3d67d" />
+
 
 rights:
 Aman Tiwari
