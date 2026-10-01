@@ -1,20 +1,18 @@
-
-import OpenAI from "openai";
-
-const ollama = new OpenAI({
-    baseURL: "http://localhost:11434/v1",
-    apiKey: "ollama"
-});
+import { OllamaClient as ollama } from "../llm/ollama_service.js";
 
 export async function generateAnswer(question, chunks) {
 
-    const context = chunks
+    // 1. Format retrieved chunks with clear metadata attribution
+    const context = (chunks || [])
         .map((chunk, index) => {
-            return `[SOURCE ${index + 1} | File: ${chunk.filename} | Page: ${chunk.page} | Table #: ${chunk.table_number ?? "N/A"}]
+            const tableMeta = chunk.table_number ? ` | Table #: ${chunk.table_number}` : "";
+            const pageMeta = chunk.page ? ` | Page: ${chunk.page}` : "";
+            return `[SOURCE ${index + 1} | File: ${chunk.filename || "Doc"}${pageMeta}${tableMeta}]
 ${chunk.content}`;
         })
         .join("\n\n---\n\n");
 
+    // 2. System instruction supporting both local QA and document synthesis/summaries
     const systemInstruction = `
 You are a Document Assistant.
 
@@ -25,14 +23,12 @@ thanks, and simple conversational messages.
 
 For document-related questions:
 
-1. Answer ONLY using the provided SOURCE CONTENT.
-2. Do NOT invent information.
-3. Do NOT guess or substitute one table for another.
-4. If the user asks for a specific table, use that exact table number.
-5. If the requested information is not present in the SOURCE CONTENT,
-   clearly say that it is not available in the provided context.
-6. Never use one source as a replacement for another source.
-7. Keep the answer relevant to the user's question.
+1. Answer using ONLY the provided SOURCE CONTENT.
+2. Do NOT invent information, facts, or use placeholder text (e.g. Latin text).
+3. If the user asks for a summary, overview, or word-count constrained synthesis, synthesize the provided SOURCE CONTENT accurately according to their constraints.
+4. Do NOT guess or substitute one table for another. If a specific table is requested, use that exact table number.
+5. If the requested information is genuinely not present in the SOURCE CONTENT, clearly state that it is not available in the provided context.
+6. Keep the answer accurate, structured, and relevant to the user's request.
 
 For normal conversational messages:
 
@@ -42,6 +38,7 @@ For normal conversational messages:
 - Do not display sources when the conversation does not require them.
 `;
 
+    // 3. User prompt incorporating context
     const userPrompt = `
 SOURCE CONTENT:
 
@@ -52,10 +49,10 @@ QUESTION:
 ${question}
 `;
 
+    // 4. Call LLM with low temperature for high fidelity
     const response = await ollama.chat.completions.create({
         model: "qwen2.5:7b",
         temperature: 0.1,
-
         messages: [
             {
                 role: "system",
@@ -70,4 +67,3 @@ ${question}
 
     return response.choices[0].message.content;
 }
-

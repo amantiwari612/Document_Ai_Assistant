@@ -5,7 +5,7 @@ import os from "os";
 import { extractTextFromPDF } from "./extract-text.js";
 import { analyzePageLines } from "./line-analyzer.js";
 import { detectBlocks } from "./block-detector.js";
-import { validateBlocks } from "./table/table-validator.js";
+import {validateBlocks} from "../ingestion/table/table-validator.js"
 import { buildPageBlocks } from "./block-builder.js";
 import { buildDocumentStructure } from "./document-structure.js";
 import { chunkDocument } from "./chunker.js";
@@ -15,7 +15,7 @@ import { pool } from "../database/db.js";
 /**
  * Dynamically ingests, chunks, vectorizes, and stores a PDF in PostgreSQL
  */
-export async function processAndIndexPDF(fileBuffer, originalFilename, documentId) {
+export async function processAndIndexPDF(fileBuffer, originalFilename, documentId,clientId) {
     const tempFilePath = path.join(os.tmpdir(), `${documentId}-${originalFilename}`);
     await fs.writeFile(tempFilePath, fileBuffer);
 
@@ -70,6 +70,7 @@ export async function processAndIndexPDF(fileBuffer, originalFilename, documentI
                 `
                 INSERT INTO document_chunks (
                     document_id,
+                    client_id,
                     filename,
                     page,
                     chunk_index,
@@ -78,10 +79,11 @@ export async function processAndIndexPDF(fileBuffer, originalFilename, documentI
                     block_type,
                     table_number
                 )
-                VALUES ($1, $2, $3, $4, $5, $6::vector, $7, $8)
+                VALUES ($1, $2, $3, $4, $5, $6, $7::vector, $8, $9)
                 `,
                 [
                     documentId,
+                    clientId, // Store device ID
                     originalFilename,
                     chunk.pageNumber,
                     chunk.chunkIndex,
@@ -90,7 +92,7 @@ export async function processAndIndexPDF(fileBuffer, originalFilename, documentI
                     chunk.blockType,
                     chunk.tableNumber ?? null
                 ]
-            );
+                );
         }
 
         console.log(`Successfully indexed ${originalFilename}\n================================`);

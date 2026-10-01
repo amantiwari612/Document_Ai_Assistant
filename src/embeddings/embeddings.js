@@ -1,9 +1,4 @@
-import OpenAI from "openai";
-
-const client = new OpenAI({
-    baseURL: "http://localhost:11434/v1",
-    apiKey: "ollama"
-});
+import { OllamaClient as client } from "../llm/ollama_service.js";
 
 const EMBEDDING_MODEL = "nomic-embed-text";
 
