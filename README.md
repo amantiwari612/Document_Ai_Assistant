@@ -1,19 +1,47 @@
-# Document_Ai_Assistant
 Document AI Assistant
 
 An AI-powered document assistant that allows users to upload documents and interact with them using natural language. The system processes document content and uses AI to answer questions, summarize information, and help users quickly understand their documents.
 
 🚀 Features
+
 📄 Upload and process documents
+
 🤖 Ask questions about uploaded documents
+
 🔍 Search and retrieve relevant document information
+
 📝 Generate document summaries
+
 💬 Natural-language interaction with documents
+
 ⚡ Fast and user-friendly interface
+
 🔐 Designed with secure document processing in mind
 
+📁 Project Structure
 
-Update the structure above according to your actual project folders.
+Update the structure below according to your actual project folders.
+
+Document_Ai_Assistant/
+│
+├── client/                     # React + Vite frontend
+│   ├── src/
+│   ├── public/
+│   ├── .env
+│   ├── package.json
+│   └── vite.config.js
+│
+|----                    # Node.js + Express backend
+│   ├── src/
+│   │   ├── api/
+│   │   ├── jobs/
+│   │   └── ...
+│   ├── .env
+│   ├── package.json
+│   └── server.js
+│
+├── .gitignore
+└── README.md
 
 ⚙️ Installation
 1. Clone the repository
@@ -22,51 +50,96 @@ cd Document_Ai_Assistant
 
 2. Install dependencies
 
-Install the dependencies required by your frontend and backend.
+Install the dependencies for both the frontend and backend.
 
-# Example
-~npm install [-for server]
+Backend
+cd server
+npm install
 
-~cd client
-~npm install [-for react]
+Frontend
 
-or, if you're using Python:
+Open another terminal:
 
-pip install -r requirements.txt
+cd client
+npm install
 
-3. Configure environment variables
+🔐 3. Configure Environment Variables
+Backend
 
-Create a .env file and add the required configuration:
+Create a .env file inside the server directory:
 
-OPENAI_API_KEY=your_api_key
-DB_HOST=db_host
-DB_PORT=db_port
-DB_USER=db_user
-DB_PASSWORD=db_Password
-DB_NAME=db_name
-OLLAMA_BASE_URL=you llm model key
-OLLAMA_API_KEY=you apikey
+DB_HOST=your_database_host
+DB_PORT=5432
+DB_USER=your_database_user
+DB_PASSWORD=your_database_password
+DB_NAME=your_database_name
 
+OLLAMA_BASE_URL=http://localhost:11434/v1
+OLLAMA_API_KEY=your_ollama_api_key
+OLLAMA_MODEL=your_ollama_model
 
-Do not commit your .env file or API keys to GitHub.
+Frontend
 
-4. Run the application
+Create a .env file inside the client directory:
 
-Use the appropriate command for your project:
-
-~cd client
-~npm run dev [for Vite]
-
-for server
-~npm run dev || npm run start [for server -rag and model]
-
-# Ui
-5.Final lookup
-
-<img width="803" height="498" alt="Screenshot 2026-09-30 at 3 13 18 PM" src="https://github.com/user-attachments/assets/d32336f4-7a0a-416f-8ab3-e94d416494ff" />
-<img width="1912" height="922" alt="Screenshot 2026-09-30 at 3 13 09 PM" src="https://github.com/user-attachments/assets/f2a57fd4-27be-4071-aa41-10dbbadcf9bd" />
-<img width="1912" height="920" alt="Screenshot 2026-09-30 at 3 12 56 PM" src="https://github.com/user-attachments/assets/bf6e2661-8974-48e1-8a80-e378b1a3d67d" />
+VITE_API_URL=http://localhost:3000
 
 
-Rights:Aman Tiwari
+Note: Never commit .env files or API keys to GitHub.
 
+Make sure .env is included in your .gitignore:
+
+.env
+.env.*
+!.env.example
+
+▶️ 4. Run the Application
+Start the Backend
+
+From the server directory:
+
+npm run dev
+
+
+Or:
+
+npm start
+
+
+The backend will run on:
+
+http://localhost:3000
+
+Start the Frontend
+
+From the client directory:
+
+npm run dev
+
+
+Vite will provide the local frontend URL in the terminal, usually:
+
+http://localhost:5173
+
+🧠 Backend Services
+
+Before starting the backend, make sure the required services are running:
+
+PostgreSQL database
+
+Ollama
+
+Required Ollama model
+
+The backend performs startup checks for PostgreSQL and Ollama before starting the Express server.
+
+🖥️ UI
+Document Upload
+<img width="803" height="498" alt="Document Upload" src="https://github.com/user-attachments/assets/d32336f4-7a0a-416f-8ab3-e94d416494ff" />
+Document Assistant
+<img width="1912" height="922" alt="Document Assistant" src="https://github.com/user-attachments/assets/f2a57fd4-27be-4071-aa41-10dbbadcf9bd" />
+Document Search
+<img width="1912" height="920" alt="Document Search" src="https://github.com/user-attachments/assets/bf6e2661-8974-48e1-8a80-e378b1a3d67d" />
+👨‍💻 Author
+
+Aman Tiwari
