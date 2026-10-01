@@ -25,8 +25,10 @@ cd Document_Ai_Assistant
 Install the dependencies required by your frontend and backend.
 
 # Example
-npm install
+~npm install [-for server]
 
+~cd client
+~npm install [-for react]
 
 or, if you're using Python:
 
@@ -36,8 +38,14 @@ pip install -r requirements.txt
 
 Create a .env file and add the required configuration:
 
-AI_API_KEY=your_api_key
-DATABASE_URL=your_database_url
+OPENAI_API_KEY=your_api_key
+DB_HOST=db_host
+DB_PORT=db_port
+DB_USER=db_user
+DB_PASSWORD=db_Password
+DB_NAME=db_name
+OLLAMA_BASE_URL=you llm model key
+OLLAMA_API_KEY=you apikey
 
 
 Do not commit your .env file or API keys to GitHub.
@@ -46,15 +54,19 @@ Do not commit your .env file or API keys to GitHub.
 
 Use the appropriate command for your project:
 
-npm run dev [for Vite]
-node source.js [for server -rag and model]
+~cd client
+~npm run dev [for Vite]
+
+for server
+~npm run dev || npm run start [for server -rag and model]
+
 # Ui
 5.Final lookup
+
 <img width="803" height="498" alt="Screenshot 2026-09-30 at 3 13 18 PM" src="https://github.com/user-attachments/assets/d32336f4-7a0a-416f-8ab3-e94d416494ff" />
 <img width="1912" height="922" alt="Screenshot 2026-09-30 at 3 13 09 PM" src="https://github.com/user-attachments/assets/f2a57fd4-27be-4071-aa41-10dbbadcf9bd" />
 <img width="1912" height="920" alt="Screenshot 2026-09-30 at 3 12 56 PM" src="https://github.com/user-attachments/assets/bf6e2661-8974-48e1-8a80-e378b1a3d67d" />
 
 
-rights:
-Aman Tiwari
+Rights:Aman Tiwari
 
