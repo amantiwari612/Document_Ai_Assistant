@@ -21,7 +21,7 @@ An AI-powered document assistant that allows users to upload documents and inter
 📁 Project Structure
 
 Update the structure below according to your actual project folders.
-
+```
 Document_Ai_Assistant/
 │
 ├── client/                     # React + Vite frontend
@@ -42,32 +42,35 @@ Document_Ai_Assistant/
 │
 ├── .gitignore
 └── README.md
-
+```
 ⚙️ Installation
 1. Clone the repository
+```
 git clone git@github.com:amantiwari612/Document_Ai_Assistant.git
 cd Document_Ai_Assistant
+```
 
-2. Install dependencies
+3. Install dependencies
 
 Install the dependencies for both the frontend and backend.
 
 Backend
-cd server
+```
 npm install
-
+```
 Frontend
 
 Open another terminal:
-
+```
 cd client
 npm install
+```
 
 🔐 3. Configure Environment Variables
 Backend
 
 Create a .env file inside the server directory:
-
+```
 DB_HOST=your_database_host
 DB_PORT=5432
 DB_USER=your_database_user
@@ -77,34 +80,36 @@ DB_NAME=your_database_name
 OLLAMA_BASE_URL=http://localhost:11434/v1
 OLLAMA_API_KEY=your_ollama_api_key
 OLLAMA_MODEL=your_ollama_model
-
+```
 Frontend
 
 Create a .env file inside the client directory:
 
+```
 VITE_API_URL=http://localhost:3000
-
+```
 
 Note: Never commit .env files or API keys to GitHub.
 
 Make sure .env is included in your .gitignore:
-
+```
 .env
 .env.*
 !.env.example
-
+```
 ▶️ 4. Run the Application
+
 Start the Backend
 
 From the server directory:
-
+```
 npm run dev
-
+```
 
 Or:
-
+```
 npm start
-
+```
 
 The backend will run on:
 
@@ -113,9 +118,9 @@ http://localhost:3000
 Start the Frontend
 
 From the client directory:
-
+```
 npm run dev
-
+```
 
 Vite will provide the local frontend URL in the terminal, usually:
 
