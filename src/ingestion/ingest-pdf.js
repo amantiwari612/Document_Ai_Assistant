@@ -1,12 +1,15 @@
+// ///////////////////////////////
+// //    TESTING INGEST FILE    //
+// ///////////////////////////////
+
 import { extractTextFromPDF } from "./extract-text.js";
 import { analyzePageLines } from "./line-analyzer.js";
 import { detectBlocks } from "./block-detector.js";
 import { validateBlocks } from "./table/table-validator.js";
 import { buildPageBlocks } from "./block-builder.js";
 import { buildDocumentStructure } from "./document-structure.js";
-import { renderTableSemantically } from "./semantic-renderer.js";
 
-const filePath = "./sample-tables.pdf";
+// const filePath = "./sample-tables.pdf";
 
 const result = await extractTextFromPDF(filePath);
 

@@ -1,56 +1,49 @@
-import e from "express";
-
-import { generateAnswer } from "../generation/answer.js";
+// src/routes/chat.js
+import express from "express";
 import { searchSimilarChunks } from "../retrieval/search.js";
+import { generateAnswer } from "../generation/answer.js";
 
-
-const router = e.Router();
+const router = express.Router();
 
 router.post("/", async (req, res) => {
   try {
-    const { message, limit } = req.body;
+    const { message, limit, documentId } = req.body;
+    const clientId = req.headers["x-client-id"] || req.body.clientId;
 
-    if (!message || typeof message !== "string" || !message.trim()) {
+    if (!message || !message.trim()) {
       return res.status(400).json({ error: "Message is required." });
     }
 
-    // Dynamic chunk limit with safe fallback (1 to 20 range)
-    const kLimit = Math.min(Math.max(parseInt(limit, 10) || 5, 1), 20);
+    if (!clientId) {
+      return res.status(400).json({ error: "Missing x-client-id header." });
+    }
 
-    console.log("\n================================");
-    console.log("NEW CHAT REQUEST");
-    console.log("Question:", message);
+    const cleanQuery = message.trim();
+    const parsedLimit = parseInt(limit, 10) || 5;
 
-    const chunks = await searchSimilarChunks(message.trim(), kLimit);
-    console.log(`Retrieved ${chunks.length} chunks`);
+    // 1. Auto-adapting search handles both specific Q&A and broad summary queries
+    const chunks = await searchSimilarChunks(cleanQuery, parsedLimit, clientId, documentId || null);
 
-    const answer = await generateAnswer(message.trim(), chunks);
+    // 2. Generation produces a summary or direct answer based on the retrieved context
+    const answer = await generateAnswer(cleanQuery, chunks);
 
-    // FIXED: Changed res.json(500).json(...) to res.status(200).json(...)
     return res.status(200).json({
       answer,
-      sources: chunks.map((chunk) => {
-        const score = Number(chunk.similarity ?? chunk.rrf_score ?? 0);
-        return {
-          id: chunk.id,
-          filename: chunk.filename,
-          page: chunk.page,
-          chunk: chunk.chunk_index,
-          blockType: chunk.block_type,
-          tableNumber: chunk.table_number,
-          similarity: Number.isNaN(score) ? 0 : Number(score.toFixed(4)),
-          content: chunk.content
-        };
-      })
+      sources: chunks.map((c) => ({
+        id: c.id,
+        filename: c.filename,
+        page: c.page,
+        chunk: c.chunk_index,
+        blockType: c.block_type,
+        tableNumber: c.table_number,
+        similarity: Number((c.similarity || 0).toFixed(4)),
+        content: c.content
+      }))
     });
+
   } catch (error) {
-    console.error("Chat error:", error);
-
-    if (res.headersSent) return;
-
-    return res.status(500).json({
-      error: "Failed to generate answer."
-    });
+    console.error("Chat Error:", error);
+    return res.status(500).json({ error: "Failed to generate answer." });
   }
 });
 
