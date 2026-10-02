@@ -2,23 +2,59 @@ Document AI Assistant
 
 An AI-powered document assistant that allows users to upload documents and interact with them using natural language. The system processes document content and uses AI to answer questions, summarize information, and help users quickly understand their documents.
 
-🚀 Features
+# 🚀 Features
 
-📄 Upload and process documents
+-📄 Upload and process documents
 
-🤖 Ask questions about uploaded documents
+-🤖 Ask questions about uploaded documents
 
-🔍 Search and retrieve relevant document information
+-🔍 Search and retrieve relevant document information
 
-📝 Generate document summaries
+-📝 Generate document summaries
 
-💬 Natural-language interaction with documents
+-💬 Natural-language interaction with documents
 
-⚡ Fast and user-friendly interface
+-⚡ Fast and user-friendly interface
 
-🔐 Designed with secure document processing in mind
+-🔐 Designed with secure document processing in mind
 
-📁 Project Structure
+# 🛠️ Technologies Used
+Frontend
+⚛️ React.js — Building the user interface
+
+⚡ Vite — Frontend development and build tool
+
+🌐 HTML5 — Application structure
+
+🎨 CSS3 — Styling and responsive design
+
+📦 JavaScript — Application logic and functionality
+
+Backend
+🟢 Node.js — Backend runtime environment
+
+🚂 Express.js — Building the backend API and server
+
+🔗 REST API — Communication between frontend and backend
+    
+
+AI & Document Processing
+🤖 AI / LLM — Understanding documents and answering user questions
+
+📄 pdf-parse — Extracting text and content from PDF documents
+
+🔍 Semantic Search / Retrieval — Finding relevant information from documents
+
+Development Tools
+🐙 Git — Version control
+
+🐙 GitHub — Source code management and collaboration
+
+💻 Visual Studio Code / Antigravity IDE — Development environment
+
+🔐 Environment Variables (.env) — Managing configuration and sensitive credentials
+
+# 📁 Project Structure
 
 Update the structure below according to your actual project folders.
 ```
