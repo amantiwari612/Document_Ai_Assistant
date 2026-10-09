@@ -1,9 +1,10 @@
-const API_URL= "http://localhost:3000/api";
+// const API_URL= "http://localhost:3000/api";
+const API_BASE = `${import.meta.env.VITE_API_URL}/api`;
 
 export async function uploadFile(file){
   const formData= new FormData();
   formData.append("file",file);
-  const res= await fetch(`${API_URL}/files`,
+  const res= await fetch(`${API_BASE}/files`,
     {
       method:"POST",
       body:formData

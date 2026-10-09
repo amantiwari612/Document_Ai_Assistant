@@ -2,14 +2,13 @@ import { useState, useEffect } from "react";
 
 import Sidebar from "./components/Sidebar/Sidebar";
 import ChatArea from "./components/ChatArea/ChatArea";
-// import UploadModal from "./components/UploadModal/UploadModal";
-
-import { fetchDocuments, uploadDocument, deleteDocument, sendMessage } from "./api/api";
-import "./App.css";
 import UploadModal from "./components/UploadModel/UploadModule";
+import { fetchDocuments, uploadDocument, sendMessage, deleteDocument } from "./api/api";
+import "./App.css";
 
 function App() {
   const [documents, setDocuments] = useState([]);
+  const [isDocsLoaded, setIsDocsLoaded] = useState(false); 
 
   const [activeChatId, setActiveChatId] = useState(null);
   const [activeDocumentId, setActiveDocumentId] = useState(null);
@@ -18,7 +17,7 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
 
-  // 1. FETCH DOCUMENTS FROM POSTGRESQL ON INITIAL RENDER
+  // 1. Initialize chats from localStorage
   const [chats, setChats] = useState(() => {
     try {
       const savedChats = localStorage.getItem("rag_app_chats");
@@ -29,46 +28,64 @@ function App() {
     }
   });
 
-  // 2. Persist chats to localStorage whenever they update
-  useEffect(() => {
-    localStorage.setItem("rag_app_chats", JSON.stringify(chats));
-  }, [chats]);
+  // 2. FETCH DOCUMENTS FROM BACKEND ON MOUNT
   useEffect(() => {
     async function loadInitialData() {
       try {
         const docs = await fetchDocuments();
-        setDocuments(docs);
+        setDocuments(docs || []);
+
+        if (docs && docs.length > 0 && !activeDocumentId) {
+          setActiveDocumentId(docs[0].id);
+        }
       } catch (error) {
         console.error("Error loading initial documents:", error);
+      } finally {
+        setIsDocsLoaded(true);
       }
     }
     loadInitialData();
   }, []);
 
-  const activeChat = chats.find((chat) => chat.id === activeChatId);
-useEffect(() => {
-    async function loadDocuments() {
-      try {
-        const response = await fetch("http://localhost:3000/api/document");
-        const data = await response.json();
+  // 3. SAFE AUTO-CLEANUP (Runs ONLY AFTER documents have finished loading)
+  useEffect(() => {
+    if (!isDocsLoaded) return; // Prevent race condition on page refresh!
 
-        if (response.ok && data.documents) {
-          setDocuments(data.documents);
-          
-          // Default to the first document if available
-          if (data.documents.length > 0 && !activeDocumentId) {
-            setActiveDocumentId(data.documents[0].id);
-          }
-        }
-      } catch (error) {
-        console.error("Failed to load document history on mount:", error);
-      }
+    const validDocIds = new Set(documents.map((doc) => doc.id));
+
+    setChats((prevChats) => {
+      const validChats = prevChats.filter(
+        (chat) => !chat.documentId || validDocIds.has(chat.documentId)
+      );
+
+      return validChats;
+    });
+  }, [documents, isDocsLoaded]);
+
+  // 4. SYNC CHATS TO LOCALSTORAGE (Only after initial document load finishes)
+  useEffect(() => {
+    if (!isDocsLoaded) return;
+    localStorage.setItem("rag_app_chats", JSON.stringify(chats));
+  }, [chats, isDocsLoaded]);
+
+  // Reset activeChatId if the active chat was deleted/purged
+  useEffect(() => {
+    if (activeChatId && !chats.some((c) => c.id === activeChatId)) {
+      setActiveChatId(null);
+    }
+  }, [chats, activeChatId]);
+
+  const activeChat = chats.find((chat) => chat.id === activeChatId);
+
+  // 5. HANDLE SELECTING / CREATING A CHAT
+  function handleSelectDocument(doc) {
+    const existingChat = chats.find((c) => c.documentId === doc.id);
+    if (existingChat) {
+      setActiveChatId(existingChat.id);
+      setActiveDocumentId(doc.id);
+      return;
     }
 
-    loadDocuments();
-  }, []);
-  // 2. HANDLE SELECTING/CREATING A CHAT FOR A DOCUMENT
-  function handleSelectDocument(doc) {
     const newChat = {
       id: `chat-${Date.now()}`,
       documentId: doc.id,
@@ -79,39 +96,36 @@ useEffect(() => {
 
     setChats((prev) => [newChat, ...prev]);
     setActiveChatId(newChat.id);
+    setActiveDocumentId(doc.id);
   }
 
-  // 3. HANDLE PDF UPLOAD
-  async function handleUploadFile(file) {
-    const result = await uploadDocument(file);
-    const newDoc = result.document;
+  // 6. DELETE INDIVIDUAL CHAT SESSION
+  function handleDeleteChat(chatId) {
+    setChats((prevChats) => prevChats.filter((chat) => chat.id !== chatId));
 
-    // Add to sidebar document state
-    setDocuments((prev) => [...prev, newDoc]);
-
-    // Create a new scoped chat for this document
-    handleSelectDocument(newDoc);
+    if (activeChatId === chatId) {
+      setActiveChatId(null);
+    }
   }
 
-  // 4. HANDLE DOCUMENT DELETION
- async function handleDeleteDocument(documentId) {
+  // 7. DELETE DOCUMENT AND ASSOCIATED CHATS
+  async function handleDeleteDocument(documentId) {
     try {
-      const response = await fetch(`http://localhost:3000/api/documents/${documentId}`, {
-        method: "DELETE"
-      });
+      await deleteDocument(documentId);
 
-      if (response.ok) {
-        setDocuments((prev) => prev.filter((doc) => doc.id !== documentId));
-        if (activeDocumentId === documentId) {
-          setActiveDocumentId(null);
-        }
+      setDocuments((prev) => prev.filter((doc) => doc.id !== documentId));
+      setChats((prev) => prev.filter((chat) => chat.documentId !== documentId));
+
+      if (activeDocumentId === documentId) {
+        setActiveDocumentId(null);
+        setActiveChatId(null);
       }
     } catch (error) {
       console.error("Delete document error:", error);
     }
   }
 
-  // 5. HANDLE SENDING MESSAGE (SCOPED TO ACTIVE DOCUMENT ID)
+  // 8. SEND MESSAGE
   async function handleSendMessage(message) {
     if (!activeChatId || isLoading || !activeChat) return;
 
@@ -121,7 +135,6 @@ useEffect(() => {
       content: message
     };
 
-    // Update UI immediately with user prompt
     setChats((prev) =>
       prev.map((chat) => {
         if (chat.id !== activeChatId) return chat;
@@ -136,7 +149,6 @@ useEffect(() => {
     setIsLoading(true);
 
     try {
-      // Pass activeChat.documentId into backend RAG query
       const response = await sendMessage(message, 5, activeChat.documentId);
 
       const assistantMessage = {
@@ -177,6 +189,19 @@ useEffect(() => {
     }
   }
 
+  // 9. HANDLE UPLOAD
+  async function handleUploadFile(file) {
+    try {
+      const result = await uploadDocument(file);
+      const newDoc = result.document;
+
+      setDocuments((prev) => [...prev, newDoc]);
+      handleSelectDocument(newDoc);
+    } catch (error) {
+      console.error("Upload error in UI:", error);
+    }
+  }
+
   return (
     <div className={`app ${darkMode ? "dark" : ""}`}>
       <UploadModal
@@ -190,6 +215,7 @@ useEffect(() => {
         documents={documents}
         activeChatId={activeChatId}
         onSelectChat={(id) => setActiveChatId(id)}
+        onDeleteChat={handleDeleteChat}
         onNewChat={() => setActiveChatId(null)}
         onSelectDocument={handleSelectDocument}
         onDeleteDocument={handleDeleteDocument}

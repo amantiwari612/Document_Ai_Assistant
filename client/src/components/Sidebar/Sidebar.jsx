@@ -8,14 +8,15 @@ function Sidebar({
     onSelectChat,
     onNewChat,
     darkMode,
-    onToggleTheme
+    onToggleTheme,
+    onDeleteChat
 }) {
     return (
         <aside className="sidebar">
 
             <div className="sidebar-header">
 
-                <h2>RAG AI</h2>
+                <h2>DOC-AI</h2>
 
             </div>
 
@@ -38,6 +39,7 @@ function Sidebar({
                 chats={chats}
                 activeChatId={activeChatId}
                 onSelectChat={onSelectChat}
+                onDeleteChat={onDeleteChat}
             />
 
 
